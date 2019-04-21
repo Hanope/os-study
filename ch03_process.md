@@ -93,7 +93,7 @@ Queue는 운영체제 **커널의 Data 영역**에 자료구조로 Queue를 만�
   - **CPU를 내어주는 프로세스의 상태**를 그 **프로세스의 PCB에 저장**
   - **CPU를 새롭게 얻는 프로세스의 상태**를 **PCB에서 읽어옴**
 
-## 🚨 System call이나 Interrupt 발생시 반드시 Context Switching이 발생하는 것은 아니다.**
+## 🚨 System call이나 Interrupt 발생시 반드시 Context Switching이 발생하는 것은 아니다.
 
 ![문맥 교환1](./img/context_switch1.png)
 - CPU 수행 정보 등 **Context의 일부를 PCB에 save**해야 하지만 **부담이 크지는 않다.**
@@ -142,3 +142,55 @@ Queue는 운영체제 **커널의 Data 영역**에 자료구조로 Queue를 만�
 - **메모리에 너무 많은 프로그램이 올라온 경우** 메모리에서 제거
 - 프로세스에게서 **memory를 뺏는 문제**
 - **degree of Multiprogramming 제어**
+
+# 7. 스레드 (Thread)
+
+![쓰레드1](./img/ch03_thread_1.png)
+
+- `스레드`(or `lightweight process`)는 CPU를 이용하는 기본 단위이다.
+- 전동적인 개념의 `Heavyweight Process`는 **하나의 Thread**를 가지고 있는 **task**로 볼 수 있다.
+- 다중 스레드로 구성된 Task 구조에서는 **하나의 서버 스레드가 blocked (waiting) 상태**인 동안에도 **동일한 Task 내의 다른 스레드가 실행(running)되어 빠른 처리**를 할 수 있다.
+- 동일한 일을 수행하는 **다중 스레드가 협력**하여 **높은 처리율 (throughput)**과 **성능 향상**을 얻을 수 있다.
+- 스레드를 사용하면 **병렬성을 높일 수 있다.** (행렬 곱 같은 경우)
+
+## 스레드의 구성
+- **Program Counter (PC)**
+- **Register Set**
+- **Stack Space**
+
+## 스레드가 동료 쓰레드와 공유하는 부분 (= task)
+- **Code Section**
+- **Data Section**
+- **OS Resources**
+
+![스레드2](./img/ch03_thread_2.png)
+
+![스레드3](./img/ch03_thread_3.png)
+
+## Single and Multithreaded Processes
+![single and multithreaded process](./img/ch03_single_and_multithreaded.png)
+
+## 스레드의 장점
+- **반응성(Responsiveness)**: **하나의 작접이 block 되어도 다른 스레드가 동작**하여 사용자에게 빠른 반응성을 제공
+  - ex) multi-threaded web: network가 blocked 되었을 경우 받아온 데이터를 rendering 하는 스레드가 동작하여 사용자에게 빠른 브라우징 환경 제공
+- **자원 공유(Resource Sharing)**: n개의 스레드가 **프로세스의** `Code`, `Data`, `Resource`를 **공유**하여 자원 낭비 방지
+- **경제성 (Economy)**
+  - **process를 creating & CPU Swithcing하는 비용**보다 **thread를 creating & Swithcing 하는 비용**이 더 **적다.**
+  - Solaris의 경우 overhead가 각각 30배, 5배 차이 난다고 한다.
+- **멀티프로세서 환경에서의 이용**
+  - 각 스레드는 **다른 프로세서에서 병렬적**으로 작동한다.
+
+## 스레드의 구현 방법
+- 운영체제 kernel의 도움을 받아 구현
+  - **Thread가 여러개** 있다는 사실을 **OS 커널이 알고 있다.**
+  - 하나의 스레드에서 **다른 스레드로 넘어가는 것**을 **커널이 CPU 스케줄링 하는 것 처럼 넘겨준다.**
+  - Windows 95/98/NT
+  - Solaris
+  - Digital UNIX, Mach
+
+- Library의 도움을 받아 구현
+  - 프로세스 안에 **여러개의 Thread**가 있다는 것을 **OS 커널이 알지 못한다.**
+  - **User Program이 스스로 Thread를 관리**하기 때문에 **구현상의 제약점**이 존재한다.
+  - **Kernel이 봤을 때는 일반적인 프로세스로 보인다.**
+
+- Real-time threads
