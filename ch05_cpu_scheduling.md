@@ -105,6 +105,7 @@
 - CPU burst time을 알 수 없다. (**추정만 가능** - 과거의 CPU burst time을 이용해서 추청)
 
 **Nonpreemptive SJF**
+
 |process|arrival time|burst time|
 |-------|------------|----------|
 |P1     |0.0         |7         |
@@ -116,6 +117,7 @@
 
 ## 5.3. SRTF(Shortest-Remaining-Time-First)
 **Preemptive SJF**
+
 |process|arrival time|burst time|
 |-------|------------|----------|
 |P1     |0.0         |7         |
